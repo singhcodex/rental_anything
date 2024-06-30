@@ -5,9 +5,9 @@ import {NextResponse} from "next/server";
 import {dbConnect} from "@/lib/dbConnect";
 import {createUser} from "@/app/queries/users";
 
-export async function POST(req) {
+export default async  function handler(req,res) {
     const conn = await dbConnect();
-    console.log(conn);
+    const {method} = await req.json();
     const { username, password, fullName, email, phoneNumber, address, userType } = await req.json();
 
     /*if (!username || !password || !email) {
