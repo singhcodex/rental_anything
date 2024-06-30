@@ -2,11 +2,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import client from "@/lib/dbConnect";
 import User from "@/models/User";
 
 export async function POST(req, res) {
-    await client.connect();
+
 
     const { email, password } = await req.json();
 

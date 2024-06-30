@@ -1,8 +1,7 @@
-import client from "@/lib/dbConnect";
+
 import Rental from "@/models/Rental";
 
 export default async (req, res) => {
-    await client.connect();
 
     const { method } = req;
 

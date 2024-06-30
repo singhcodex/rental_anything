@@ -1,8 +1,7 @@
-import client from "@/lib/dbConnect";
 import User from "@/models/User";
 
 export default async (req, res) => {
-    await client.connect();
+
 
     const { method } = req;
 

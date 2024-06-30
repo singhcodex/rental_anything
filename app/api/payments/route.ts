@@ -1,7 +1,7 @@
-import client from "@/lib/dbConnect";
+
 import Payment from "@/models/Payment";
 export default async (req, res) => {
-    await client.connect();
+
 
     const { method } = req;
 
