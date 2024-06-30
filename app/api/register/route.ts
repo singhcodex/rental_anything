@@ -3,34 +3,38 @@ import User from "@/models/User";
 import bcrypt from 'bcryptjs';
 import {NextResponse} from "next/server";
 
-export async function POST(req, res) {
+export async function POST(req) {
     await client.connect();
 
-    const { username, password, fullName, email, phoneNumber, address, userType } = await req.json();
+    try {
+        const { username, password, fullName, email, phoneNumber, address, userType } = await req.json();
 
-    if (!username || !password || !email || !userType) {
-        return NextResponse.json({ error: 'Missing required fields' },{ status: 400 });
+        /*if (!username || !password || !email) {
+            return NextResponse.json({ message: 'Missing required fields' },{ status: 400 });
+        }*/
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return NextResponse.json({ message: 'User already exists' }, { status: 400 });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        await User.create({
+            username,
+            password: passwordHash,
+            fullName,
+            email,
+            phoneNumber,
+            address,
+            userType,
+            createdAt: new Date(),
+        });
+
+        return NextResponse.json({ message: 'user register' }, { status: 201 });
+    }catch (error){
+        return NextResponse.json({message: "An error occurred while register user"}, {status: 500})
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return NextResponse.json({ error: 'User already exists' }, { status: 400 });
-    }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const user = new User({
-        username,
-        passwordHash,
-        fullName,
-        email,
-        phoneNumber,
-        address,
-        userType,
-        createdAt: new Date(),
-    });
-
-    await user.create();
-
-    return NextResponse.json({ success: true, data: user }, { status: 201 });
 }

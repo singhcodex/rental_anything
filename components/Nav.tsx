@@ -15,6 +15,10 @@ const links = [
         name: "register",
         path: "/auth/register",
     },
+    {
+        name:"login",
+        path:"/auth/login",
+    },
 ]
 
 const Nav = () => {

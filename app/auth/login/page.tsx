@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -24,10 +27,30 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4">
-            {/* Add form fields with Tailwind CSS styles here */}
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 mt-4">Login</button>
-        </form>
+        <div className="container max-w-[568px] mx-auto px-3 py-5">
+            <div className="flex flex-col gap-6 p-10 bg-[#27272c] rounded-xl">
+                <form onSubmit={handleSubmit}>
+                    {/* Add form fields with Tailwind CSS styles here */}
+                    <h2 className="h2 text-center">Welcome BacK.</h2>
+                    <p className="text-lg text-center mt-2">We are happy to help member of <span className="text-accent underline">our Community</span>.</p>
+                    <div className="flex flex-col gap-4 mt-4">
+                        <div>
+                            <Label htmlFor="email" className="text-lg">Email</Label>
+                            <Input type="text" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Email"/>
+                        </div>
+                        <div className="">
+                            <Label htmlFor="password" className="text-lg">Password</Label>
+                            <Input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter Password"/>
+                        </div>
+                    </div>
+                    <div className="flex justify-center">
+                        <Button type="submit" className="text-xl bg-accent hover:bg-accent/90 rounded-full my-3 hover:scale-125 transition-all">Login</Button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
     );
 };
 

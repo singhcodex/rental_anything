@@ -4,12 +4,18 @@ import {GiReceiveMoney} from "react-icons/gi";
 import {Button} from "@/components/ui/button";
 import {FiArrowRight} from "react-icons/fi";
 import Photo from "@/components/Photo";
+import {motion} from "framer-motion";
 
 export default function Home() {
 
 
   return (
-    <section className="h-full">
+    <motion.section
+        initial={{opacity:0}}
+        animate={{
+            opacity:1,
+            transition: {delay:1, duration:0.4, ease:"easeIn"},
+        }} className="h-full">
         <div className="container mx-auto h-full">
             <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24">
                 {/* heading*/}
@@ -32,7 +38,7 @@ export default function Home() {
 
                 </div>
                 {/* image*/}
-                <div className="order-1 xl:order-none mb-8 xl:mb-0">
+                <div className="order-1 xl:order-none mb-8 xl:mb-0 relative">
                     <Photo/>
                 </div>
             </div>
@@ -42,6 +48,6 @@ export default function Home() {
             </div>
         </div>
 
-    </section>
+    </motion.section>
   );
 }

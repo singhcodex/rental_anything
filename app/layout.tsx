@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import {ThemeProvider} from "next-themes";
 import Header from "@/components/Header";
 
 const inter = Inter({
@@ -23,10 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-      <ThemeProvider attribute={'class'} enableSystem disableTransitionOnChange>
         <Header />
         {children}
-      </ThemeProvider>
       </body>
     </html>
   );

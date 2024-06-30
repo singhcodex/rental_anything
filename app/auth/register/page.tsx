@@ -1,16 +1,8 @@
-'use client';
+"use client"
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
+
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -26,12 +18,13 @@ const Register = () => {
         email: '',
         phoneNumber: '',
         address: '',
-        userType: 'Renter',
+        userType: 'Both',
     });
     const router = useRouter();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        console.log(formData)
     };
 
     const handleSubmit = async (e) => {
@@ -53,14 +46,12 @@ const Register = () => {
     };
 
     return (
-        <div className="container mx-auto py-3 px-5">
-
-
+        <div className="max-w-[648px] container mx-auto py-3 px-5">
             <div className="flex flex-col gap-6 p-10 bg-[#27272c] rounded-xl">
-                <form className="">
+                <form className="" onSubmit={handleSubmit}>
                     <h2 className="h2 text-center">Register with Us.</h2>
-                    <p className="text-lg text-center mt-4">We are so happy to for you to be a member of <span className="text-accent underline">our Community</span>.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <p className="text-lg text-center mt-2">We are so happy to for you to be a member of <span className="text-accent underline">our Community</span>.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-5">
                         <div>
                             <Label htmlFor="fullName" className="text-lg">FullName</Label>
                             <Input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter Full Name"/>
@@ -84,30 +75,14 @@ const Register = () => {
                         <Input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter Password"/>
                     </div>
                     <div className="mt-4">
-                        <Label className="text-lg">Select your Role</Label>
-                        <Select value={formData.userType} name="userType" onChange={handleChange}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select a Role"></SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Select a Role</SelectLabel>
-                                    <SelectItem value="renter">
-                                        Renter
-                                    </SelectItem>
-                                    <SelectItem value="owner">Owner</SelectItem>
-
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-
-                    <div className="mt-4">
                         <Label htmlFor="address" className="text-lg">Address</Label>
                         <Input type="text" id="address" name="address" value={formData.address} onChange={handleChange} placeholder="Enter address"/>
                     </div>
-                    <Button type="Submit" className="text-xl bg-accent rounded-lg my-3">Register</Button>
+                    <div className="flex justify-center">
+                        <Button type="Submit" className="text-xl bg-accent rounded-lg my-3">Register</Button>
+                    </div>
+
+
                 </form>
             </div>
         </div>
