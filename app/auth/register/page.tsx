@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import axios from "axios";
+
 
 const Register = () => {
 
@@ -35,11 +35,12 @@ const Register = () => {
             return;
         }
         try {
-            const res = await axios.post('/api/register', {
+            const res = await fetch('/api/register', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body: JSON.stringify({formData})
             });
+            console.log({res});
             router.push('/auth/login');
         } catch (error) {
             console.error('Registration failed:', error.response.data.error);

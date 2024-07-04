@@ -1,38 +1,24 @@
-
-import User from "@/models/User";
-import bcrypt from 'bcryptjs';
-import {NextResponse} from "next/server";
-import {dbConnect} from "@/lib/dbConnect";
-
-export async function POST(req,res) {
-    await dbConnect();
-    const { username, password, fullName, email } = await req.json();
-
-    /*if (!username || !password || !email) {
-        return NextResponse.json({ message: 'Missing required fields' },{ status: 400 });
-    }*/
-
-    /*const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return NextResponse.json({ message: 'User already exists' }, {status: 400});
-    }*/
+import prisma from "../prismaClient";
+import {NextRequest, NextResponse} from "next/server";
+import bcrypt from "bcryptjs";
 
 
-    const newUser = new User({
-        username,
-        password,
-        fullName,
-        email,
-    });
+
+export async function POST(req:NextRequest) {
 
     try {
-        console.log('entering try block');
-        await newUser.save();
-        return NextResponse.json({ message: 'user register' }, {status: 201});
+        const { username, password, fullName, email } = await req.json();
+        const hashedPassword = await bcrypt.hash(password, 10);
+        let user = await prisma.user.create({
+            data:{password: hashedPassword,fullName:fullName, email: email,username: username},
+        });
+        if(user){
+            return NextResponse.json({message:'user created', status: 200});
+        }else{
+            return NextResponse.json({message:'error in user create', status:400});
+        }
+
     }catch (error){
-        console.log({error});
-        return NextResponse.json({message: "An error occurred while register user"}, {status: 500})
+        return NextResponse.json({message:'error in db connect', status:500});
     }
-
-
 }
