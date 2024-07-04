@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+import {signIn} from "next-auth/react";
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -17,13 +17,20 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('/api/login', formData);
-            localStorage.setItem('token', response.data.token);
-            router.push('/protected');
-        } catch (error) {
-            console.error('Login failed:', error.response.data.error);
+
+        const response = await signIn('credentials', {
+            username: formData.email,
+            password: formData.password,
+            redirect: false
+        });
+
+        if(!response.error){
+            console.log("successfull sign in");
+            router.push('/')
+        }else{
+            console.log(response.error);
         }
+
     };
 
     return (
