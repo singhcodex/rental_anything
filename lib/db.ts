@@ -1,10 +1,8 @@
-
-import {PrismaClient} from "@prisma/client";
-
-declare global {
-    var prisma: PrismaClient | undefined;
+import prisma from "@/prisma";
+export const connectToDb = async () => {
+    try {
+        await prisma.$connect();
+    } catch (error: any){
+        return new Error(error.message);
+    }
 }
-
-export const db = globalThis.prisma || new PrismaClient();
-
-if(process.env.NODE_ENV !== 'production') globalThis.prisma = db;

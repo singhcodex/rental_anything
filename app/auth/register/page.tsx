@@ -1,94 +1,104 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Register = () => {
+  const [error, setError] = useState("");
 
-    const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
-    const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-        address: '',
-        userType: 'Both',
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!username || !email || !password) {
+      setError("All Fields are required");
+      return;
+    }
+
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
     });
-    const router = useRouter();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        console.log(formData)
-    };
+    const data = await res.json();
+    setError(data.message);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if(!formData.username || !formData.email || !formData.password || !formData.phoneNumber){
-            setError("All Fields are required");
-            return;
-        }
-        try {
-            const res = await fetch('/api/register', {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({formData})
-            });
-            console.log({res});
-            router.push('/auth/login');
-        } catch (error) {
-            console.error('Registration failed:', error.response.data.error);
-        }
-    };
+    if (data.status === 201) {
+      console.log("user created with email: ");
+    } else {
+      console.log({ data });
+    }
+    // router.push("/auth/login");
+  };
 
-    return (
-        <div className="max-w-[648px] container mx-auto py-3 px-5">
-            <div className="flex flex-col gap-6 p-10 bg-[#27272c] rounded-xl">
-                <form className="" onSubmit={handleSubmit}>
-                    <h2 className="h2 text-center">Register with Us.</h2>
-                    <p className="text-lg text-center mt-2">We are so happy to for you to be a member of <span className="text-accent underline">our Community</span>.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-5">
-                        <div>
-                            <Label htmlFor="fullName" className="text-lg">FullName</Label>
-                            <Input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter Full Name"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="username" className="text-lg">Username</Label>
-                            <Input type="text" id="username" name="username" value={formData.username} onChange={handleChange} placeholder="Enter username"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="email" className="text-lg">Email</Label>
-                            <Input type="text" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Email"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="contact" className="text-lg">Contact</Label>
-                            <Input type="number" id="contact" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder="Enter Contact number"/>
-                        </div>
-                    </div>
-
-                    <div className="mt-4">
-                        <Label htmlFor="password" className="text-lg">Password</Label>
-                        <Input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter Password"/>
-                    </div>
-                    <div className="mt-4">
-                        <Label htmlFor="address" className="text-lg">Address</Label>
-                        <Input type="text" id="address" name="address" value={formData.address} onChange={handleChange} placeholder="Enter address"/>
-                    </div>
-                    <div className="flex justify-center">
-                        <Button type="Submit" className="text-xl bg-accent rounded-lg my-3">Register</Button>
-                    </div>
-
-
-                </form>
+  return (
+    <div className="max-w-[648px] container mx-auto py-3 px-5">
+      <div className="flex flex-col gap-6 p-10 bg-[#27272c] rounded-xl">
+        <form className="" onSubmit={handleSubmit}>
+          <h2 className="h2 text-center">Register with Us.</h2>
+          <p className="text-lg text-center mt-2">
+            We are so happy to for you to be a member of{" "}
+            <span className="text-accent underline">our Community</span>.
+          </p>
+          <div>
+            <div className="mt-4">
+              <Label htmlFor="username" className="text-lg">
+                Username
+              </Label>
+              <Input
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
+              />
             </div>
-        </div>
-    );
+            <div className="mt-4">
+              <Label htmlFor="email" className="text-lg">
+                Email
+              </Label>
+              <Input
+                type="text"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Email"
+              />
+            </div>
+            <div className="mt-4">
+              <Label htmlFor="password" className="text-lg">
+                Password
+              </Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password"
+              />
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button type="submit" className="text-xl bg-accent rounded-lg my-3">
+              Register
+            </Button>
+          </div>
+        </form>
+        {error && <p>{error}</p>}
+      </div>
+    </div>
+  );
 };
 
 export default Register;

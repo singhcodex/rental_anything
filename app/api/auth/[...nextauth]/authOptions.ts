@@ -1,7 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { compare} from "bcrypt";
-import prisma from "../../prismaClient";
+import prisma from "../../../../prisma";
 
 const authOptions = {
     session: {strategy: 'jwt'},
