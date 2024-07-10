@@ -6,19 +6,23 @@ import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const Register = () => {
-  const [error, setError] = useState("");
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!username || !email || !password) {
-      setError("All Fields are required");
+      toast({
+        variant: "destructive",
+        description: "All fields are Required",
+      });
       return;
     }
 
@@ -29,14 +33,21 @@ const Register = () => {
     });
 
     const data = await res.json();
-    setError(data.message);
 
     if (data.status === 201) {
-      console.log("user created with email: ");
+      console.log("user created with email");
+      toast({
+        variant: "default",
+        description: data.message,
+      });
     } else {
+      toast({
+        variant: "destructive",
+        description: data.message,
+      });
       console.log({ data });
     }
-    // router.push("/auth/login");
+    router.push("/auth/login");
   };
 
   return (
@@ -72,7 +83,7 @@ const Register = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter Email"
+                placeholder="Enter Email address"
               />
             </div>
             <div className="mt-4">
@@ -90,12 +101,17 @@ const Register = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <Button type="submit" className="text-xl bg-accent rounded-lg my-3">
+            <Button
+              type="submit"
+              className="text-xl bg-accent rounded-lg my-3"
+              disabled={
+                (username || email || password) && isDisabled ? false : true
+              }
+            >
               Register
             </Button>
           </div>
         </form>
-        {error && <p>{error}</p>}
       </div>
     </div>
   );
